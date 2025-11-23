@@ -1,6 +1,6 @@
 extends Camera3D
 
-@onready var dog: CharacterBody3D = get_parent().get_node("dog")
+@onready var dog: CharacterBody3D = $".."
 
 const BASE_OFFSET = Vector3(0, 4, -10)  # Behind and above the dog (relative to forward direction)
 const SMOOTH_SPEED = 5.0  # How fast the camera follows

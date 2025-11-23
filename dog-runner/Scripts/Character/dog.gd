@@ -17,7 +17,7 @@ const SWIPE_THRESHOLD := 80.0   # minimum swipe distance
 
 @onready var anim_player: AnimationPlayer = $AnimationPlayer
 
-var forward_direction: Vector3 = Vector3.FORWARD
+var forward_direction: Vector3 = Vector3.x
 var processed_turn_areas = {}
 
 func _ready():
