@@ -32,6 +32,7 @@ extends Node3D
 @onready var right_prop_12: Node3D = $PropsPlaceholderRight/RightProp12
 @onready var right_prop_13: Node3D = $PropsPlaceholderRight/RightProp13
 @onready var right_prop_14: Node3D = $PropsPlaceholderRight/RightProp14
+@onready var right_prop_15: Node3D = $PropsPlaceholderRight/RightProp15
 
 var rng: RandomNumberGenerator
 
@@ -50,35 +51,26 @@ func _ready():
 	
 	right_props = [right_prop_1, right_prop_2, right_prop_3, right_prop_4, right_prop_5,
 				   right_prop_6, right_prop_7, right_prop_8, right_prop_9, right_prop_10,
-				   right_prop_11, right_prop_12, right_prop_13, right_prop_14]
+				   right_prop_11, right_prop_12, right_prop_13, right_prop_14,right_prop_15]
 	
-	# Hide all props initially and ensure clean state
+	# Hide all props initially
 	_hide_all_props()
 	
 	# Randomly show 1 left and 1 right prop
 	call_deferred("_show_random_props")
 
-func _exit_tree():
-	# Clean up when chunk is removed
-	_hide_all_props()
-
 func _hide_all_props():
-	# Aggressively hide all left props
+	# Hide all left props
 	for prop in left_props:
 		if prop:
 			prop.visible = false
-			prop.process_mode = Node.PROCESS_MODE_DISABLED  # Disable processing too
 	
-	# Aggressively hide all right props
+	# Hide all right props
 	for prop in right_props:
 		if prop:
 			prop.visible = false
-			prop.process_mode = Node.PROCESS_MODE_DISABLED  # Disable processing too
 
 func _show_random_props():
-	# First ensure all props are hidden (safety check)
-	_hide_all_props()
-	
 	# Define primary props that should always be active
 	var primary_props = [1, 7, 14, 13, 11, 10, 9]  # prop numbers
 	var secondary_props = [2, 3, 4, 5, 6, 8, 12, 15]  # remaining props
@@ -100,9 +92,6 @@ func _show_random_props():
 		# Secondary on left, primary on right
 		_show_prop_by_number(selected_secondary, "left")
 		_show_prop_by_number(selected_primary, "right")
-	
-	# Debug: Count visible props to ensure only 2 are showing
-	_debug_visible_props()
 
 func _show_prop_by_number(prop_number: int, side: String):
 	var prop_node = null
@@ -120,106 +109,3 @@ func _show_prop_by_number(prop_number: int, side: String):
 	if prop_node:
 		prop_node.visible = true
 		print("Showing prop", prop_number, " on ", side, " side")
-
-func _debug_visible_props():
-	var left_visible_count = 0
-	var right_visible_count = 0
-	var left_visible_props = []
-	var right_visible_props = []
-	
-	# Check left props with detailed info
-	for i in range(left_props.size()):
-		var prop = left_props[i]
-		if prop and prop.visible:
-			left_visible_count += 1
-			left_visible_props.append("prop" + str(i + 1) + " at " + str(prop.global_position))
-	
-	# Check right props with detailed info
-	for i in range(right_props.size()):
-		var prop = right_props[i]
-		if prop and prop.visible:
-			right_visible_count += 1
-			right_visible_props.append("prop" + str(i + 1) + " at " + str(prop.global_position))
-	
-	# Enhanced debug output with chunk identification
-	var chunk_id = str(self.get_instance_id())[-4]  # Last 4 digits of instance ID
-	print("=== CHUNK ", chunk_id, " DEBUG ===")
-	print("Chunk position: ", global_position)
-	print("Left props (", left_visible_count, "): ", left_visible_props)
-	print("Right props (", right_visible_count, "): ", right_visible_props)
-	print("Total: ", left_visible_count + right_visible_count, " props")
-	
-	# Safety warnings
-	if left_visible_count > 1:
-		print("❌ ERROR: Too many left props on chunk ", chunk_id, ": ", left_visible_props)
-		print("🔧 HIDING EXTRA LEFT PROPS...")
-		# Hide all but first left prop
-		var hidden = 0
-		for i in range(left_props.size()):
-			var prop = left_props[i]
-			if prop and prop.visible:
-				if hidden > 0:
-					prop.visible = false
-					print("  → Hidden left prop", (i + 1))
-				hidden += 1
-	
-	if right_visible_count > 1:
-		print("❌ ERROR: Too many right props on chunk ", chunk_id, ": ", right_visible_props)
-		print("🔧 HIDING EXTRA RIGHT PROPS...")
-		# Hide all but first right prop
-		var hidden = 0
-		for i in range(right_props.size()):
-			var prop = right_props[i]
-			if prop and prop.visible:
-				if hidden > 0:
-					prop.visible = false
-					print("  → Hidden right prop", (i + 1))
-				hidden += 1
-	
-	if left_visible_count + right_visible_count > 2:
-		print("❌ ERROR: Too many total props on chunk ", chunk_id)
-		print("🔧 FORCING CLEANUP...")
-		_hide_all_props()
-		_show_random_props()  # Try again
-	else:
-		print("✅ OK: Chunk ", chunk_id, " has correct prop count")
-	print("=========================")
-
-# Strict validation - runs every frame to enforce prop limits
-func _process(delta):
-	_strict_prop_validation()
-
-func _strict_prop_validation():
-	var left_visible_count = 0
-	var right_visible_count = 0
-	
-	# Count visible left props
-	for prop in left_props:
-		if prop and prop.visible:
-			left_visible_count += 1
-	
-	# Count visible right props  
-	for prop in right_props:
-		if prop and prop.visible:
-			right_visible_count += 1
-	
-	# Strict enforcement: max 1 prop per side
-	if left_visible_count > 1:
-		print("STRICT: Too many left props (", left_visible_count, "), hiding extras...")
-		var hidden_count = 0
-		for prop in left_props:
-			if prop and prop.visible:
-				if hidden_count > 0:  # Keep first visible, hide rest
-					prop.visible = false
-					prop.process_mode = Node.PROCESS_MODE_DISABLED
-				hidden_count += 1
-	
-	if right_visible_count > 1:
-		print("STRICT: Too many right props (", right_visible_count, "), hiding extras...")
-		var hidden_count = 0
-		for prop in right_props:
-			if prop and prop.visible:
-				if hidden_count > 0:  # Keep first visible, hide rest
-					prop.visible = false
-					prop.process_mode = Node.PROCESS_MODE_DISABLED
-				hidden_count += 1
