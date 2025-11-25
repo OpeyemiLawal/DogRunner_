@@ -32,19 +32,18 @@ func _physics_process(delta: float) -> void:
 		velocity += get_gravity() * delta
 
 	# Jump
-	if Input.is_action_just_pressed("ui_accept"):
-		print("Jump pressed - on floor:", is_on_floor())
-		if is_on_floor():
-			_do_jump()
+	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
+		_do_jump()
 
 	_handle_lane_input()
 	_handle_swipe_input()
 
 	_apply_lane_movement(delta)
 
-	# Always move forward
+	# Always move forward (horizontal only - preserve Y velocity)
 	var target_forward_velocity = forward_direction * SPEED
-	velocity = velocity.move_toward(target_forward_velocity, ACCEL * delta)
+	velocity.x = lerp(velocity.x, target_forward_velocity.x, ACCEL * delta)
+	velocity.z = lerp(velocity.z, target_forward_velocity.z, ACCEL * delta)
 
 	# Animation
 	if velocity.length() > 0:
@@ -117,7 +116,6 @@ func _process_swipe():
 
 func _do_jump():
 	velocity.y = JUMP_VELOCITY
-	print("Jumping! velocity.y=", velocity.y)
 	if anim_player.has_animation("Dog|Jump"):
 		anim_player.play("Dog|Jump")
 
