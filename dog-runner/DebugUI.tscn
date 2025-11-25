@@ -1,0 +1,35 @@
+[gd_scene load_steps=2 format=3 uid="uid://bkfapdt6tbw5g"]
+
+[ext_resource type="Script" uid="uid://drqb6kl6aih1t" path="res://Scripts/ProceduralGeneration/DebugUI.gd" id="1_debug_script"]
+
+[node name="DebugUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_debug_script")
+
+[node name="ChunkCount" type="Label" parent="."]
+layout_mode = 0
+offset_right = 200.0
+offset_bottom = 23.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Chunks: 0"
+
+[node name="Position" type="Label" parent="."]
+layout_mode = 0
+offset_top = 28.0
+offset_right = 200.0
+offset_bottom = 51.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Player: (0, 0, 0)"
+
+[node name="DebugInfo" type="Label" parent="."]
+layout_mode = 0
+offset_top = 56.0
+offset_right = 200.0
+offset_bottom = 79.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Distance to next spawn: 0"

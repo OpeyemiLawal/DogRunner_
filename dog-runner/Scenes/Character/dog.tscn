@@ -2334,7 +2334,7 @@ _data = {
 size = Vector3(0.1796875, 0.51654625, 0.7788086)
 
 [node name="player" type="CharacterBody3D"]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+transform = Transform3D(-8.742278e-08, 0, -2, 0, 2, 0, 2, 0, -8.742278e-08, 0, 0, 0)
 script = ExtResource("1_nvlu8")
 
 [node name="Sketchfab_model" type="Node3D" parent="."]

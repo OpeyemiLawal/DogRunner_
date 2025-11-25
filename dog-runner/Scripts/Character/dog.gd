@@ -5,7 +5,7 @@ const JUMP_VELOCITY = 4.5
 const ACCEL = 15.0
 
 # Lane movement
-const LANE_WIDTH = 15.0
+const LANE_WIDTH = 20.0
 var lane_index := 0
 var lane_change_speed := 10.0
 var base_forward_position: Vector3
@@ -17,7 +17,7 @@ const SWIPE_THRESHOLD := 80.0   # minimum swipe distance
 
 @onready var anim_player: AnimationPlayer = $AnimationPlayer
 
-var forward_direction: Vector3 = Vector3.x
+var forward_direction: Vector3 = Vector3.FORWARD
 var processed_turn_areas = {}
 
 func _ready():

@@ -1,0 +1,35 @@
+[gd_scene load_steps=7 format=3 uid="uid://2uu4plvr1rnt"]
+
+[ext_resource type="Script" uid="uid://blsuft1qw71ns" path="res://Scripts/ProceduralGeneration/WorldGenerator.gd" id="1_worldgen"]
+[ext_resource type="PackedScene" uid="uid://p0yomltie1ir" path="res://Scenes/Character/dog.tscn" id="3_5gbqf"]
+[ext_resource type="PackedScene" uid="uid://bkfapdt6tbw5g" path="res://DebugUI.tscn" id="4_debug_ui"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_aq407"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_5gbqf"]
+sky_material = SubResource("ProceduralSkyMaterial_aq407")
+
+[sub_resource type="Environment" id="Environment_8qjj4"]
+background_mode = 2
+sky = SubResource("Sky_5gbqf")
+tonemap_mode = 2
+
+[node name="WorldGenerator" type="Node3D"]
+script = ExtResource("1_worldgen")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_8qjj4")
+
+[node name="player" parent="." groups=["player"] instance=ExtResource("3_5gbqf")]
+
+[node name="roadHolder" type="Node3D" parent="."]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="DebugUI" parent="CanvasLayer" instance=ExtResource("4_debug_ui")]

@@ -25,3 +25,4 @@ func _process(delta):
 		
 		# Make camera look at the dog
 		look_at(dog.global_position, Vector3.UP)
+ 
