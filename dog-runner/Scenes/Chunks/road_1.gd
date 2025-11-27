@@ -40,9 +40,16 @@ var rng: RandomNumberGenerator
 var left_props: Array[Node3D] = []
 var right_props: Array[Node3D] = []
 
+@export var start_point_path: NodePath
+@export var end_point_path: NodePath
+
+@onready var start_point = $Entry
+@onready var end_point  = $Exit
+
 func _ready():
 	rng = RandomNumberGenerator.new()
 	rng.randomize()
+	
 	
 	# Initialize prop arrays
 	left_props = [left_prop_1, left_prop_2, left_prop_3, left_prop_4, left_prop_5, 
@@ -108,4 +115,4 @@ func _show_prop_by_number(prop_number: int, side: String):
 	
 	if prop_node:
 		prop_node.visible = true
-		print("Showing prop", prop_number, " on ", side, " side")
+		#print("Showing prop", prop_number, " on ", side, " side")

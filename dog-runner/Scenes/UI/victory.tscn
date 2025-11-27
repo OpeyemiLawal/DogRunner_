@@ -1,0 +1,123 @@
+[gd_scene load_steps=7 format=3 uid="uid://d1o5w0hssk6b1"]
+
+[ext_resource type="Script" uid="uid://cicq4ewflg3ii" path="res://Scenes/UI/victory.gd" id="1_ge3lp"]
+[ext_resource type="Texture2D" uid="uid://bcs4botljqq73" path="res://Assets/GUI/MissonComplete.png" id="1_viw8u"]
+[ext_resource type="Texture2D" uid="uid://bjje1iudsfyhe" path="res://Assets/GUI/Victory.png" id="2_ge3lp"]
+[ext_resource type="FontFile" uid="uid://bxc7y0e14ufe4" path="res://Assets/Font/Montserrat-ExtraBoldItalic.ttf" id="3_w5vdd"]
+[ext_resource type="Texture2D" uid="uid://cfru5dy4l8psn" path="res://Assets/GUI/VictoryCoinPlaceHolder.png" id="4_m1174"]
+[ext_resource type="Texture2D" uid="uid://wj3th13gohev" path="res://Assets/GUI/VictoryBtn.png" id="5_x3tfs"]
+
+[node name="Victory" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ge3lp")
+
+[node name="MissonComplete" type="Sprite2D" parent="."]
+position = Vector2(134.99997, 16)
+scale = Vector2(1.325615, 1.5457064)
+texture = ExtResource("1_viw8u")
+centered = false
+
+[node name="Victory" type="Sprite2D" parent="."]
+position = Vector2(599.75, 253.75002)
+scale = Vector2(1.2076701, 1.1759002)
+texture = ExtResource("2_ge3lp")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 536.0
+offset_top = 344.0
+offset_right = 677.0
+offset_bottom = 382.0
+theme_override_fonts/font = ExtResource("3_w5vdd")
+theme_override_font_sizes/font_size = 30
+text = "Rewards"
+
+[node name="VictoryCoinPlaceHolder" type="Sprite2D" parent="."]
+position = Vector2(797, 220.00003)
+scale = Vector2(2.7612154, 2.0831025)
+texture = ExtResource("4_m1174")
+
+[node name="Label2" type="Label" parent="."]
+layout_mode = 0
+offset_left = 577.0
+offset_top = 418.0
+offset_right = 736.0
+offset_bottom = 456.0
+scale = Vector2(1, 1.6)
+theme_override_fonts/font = ExtResource("3_w5vdd")
+theme_override_font_sizes/font_size = 20
+text = "+20 XYZ COINS"
+
+[node name="Next Misson2" type="Button" parent="."]
+layout_mode = 0
+offset_left = 234.99998
+offset_top = 393.0
+offset_right = 1591.0
+offset_bottom = 728.0
+scale = Vector2(1.2108556, 1)
+icon = ExtResource("5_x3tfs")
+flat = true
+expand_icon = true
+
+[node name="Label4" type="Label" parent="Next Misson2"]
+layout_mode = 0
+offset_left = 215.55006
+offset_top = 145.0
+offset_right = 428.55005
+offset_bottom = 174.0
+scale = Vector2(0.933931, 1.6)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_w5vdd")
+theme_override_font_sizes/font_size = 23
+text = "CLAIM REWARDS"
+
+[node name="Next Misson3" type="Button" parent="."]
+layout_mode = 0
+offset_left = -197.0
+offset_top = 393.0
+offset_right = 1159.0
+offset_bottom = 728.0
+scale = Vector2(1.2108556, 1)
+icon = ExtResource("5_x3tfs")
+flat = true
+expand_icon = true
+
+[node name="Label3" type="Label" parent="Next Misson3"]
+layout_mode = 0
+offset_left = 229.58974
+offset_top = 145.0
+offset_right = 406.58972
+offset_bottom = 174.0
+scale = Vector2(0.96696526, 1.6)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_w5vdd")
+theme_override_font_sizes/font_size = 23
+text = "NEXT MISSION"
+
+[node name="Next Misson4" type="Button" parent="."]
+layout_mode = 0
+offset_left = 603.0
+offset_top = 393.0
+offset_right = 1959.0
+offset_bottom = 728.0
+scale = Vector2(1.2108556, 1)
+icon = ExtResource("5_x3tfs")
+flat = true
+expand_icon = true
+
+[node name="Label5" type="Label" parent="Next Misson4"]
+layout_mode = 0
+offset_left = 281.61905
+offset_top = 145.0
+offset_right = 359.61905
+offset_bottom = 174.0
+scale = Vector2(1, 1.6)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_w5vdd")
+theme_override_font_sizes/font_size = 23
+text = "REPLY"

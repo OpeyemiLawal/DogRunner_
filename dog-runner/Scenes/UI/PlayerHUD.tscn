@@ -1,0 +1,196 @@
+[gd_scene load_steps=8 format=3 uid="uid://bvwgq8x7n2k3r"]
+
+[ext_resource type="Script" uid="uid://bnqqbxgakyyjn" path="res://Scripts/UI/PlayerHUD.gd" id="1_2d3k4"]
+[ext_resource type="Texture2D" uid="uid://8o7c35hnrdjg" path="res://Assets/GUI/CoinHud.png" id="2_jvqdk"]
+[ext_resource type="FontFile" uid="uid://cw5kuuy3dhdrj" path="res://Assets/Font/Montserrat-Bold.ttf" id="3_6awip"]
+[ext_resource type="Texture2D" uid="uid://bossws7m5j44p" path="res://Assets/GUI/coin.png" id="3_13epk"]
+[ext_resource type="Texture2D" uid="uid://jqjc3gme2qrj" path="res://Assets/GUI/health_hud.png" id="5_qy3jh"]
+[ext_resource type="Texture2D" uid="uid://bxj8jibvnrpnt" path="res://Assets/GUI/hearts.png" id="6_80dm8"]
+[ext_resource type="Texture2D" uid="uid://clvxjjw4q3hfy" path="res://Assets/GUI/HealthBar.png" id="7_hvbbi"]
+
+[node name="PlayerHUD" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_2d3k4")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -201.0
+offset_top = 13.0
+offset_right = 56.0
+offset_bottom = 143.0
+grow_horizontal = 0
+texture = ExtResource("2_jvqdk")
+expand_mode = 1
+
+[node name="CoinLabel" type="Label" parent="TextureRect"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -123.0
+offset_top = 48.0
+offset_right = -66.0
+offset_bottom = 77.0
+grow_horizontal = 0
+theme_override_colors/font_outline_color = Color(0.20990813, 0.20990813, 0.2099081, 1)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("3_6awip")
+theme_override_font_sizes/font_size = 23
+text = "004"
+vertical_alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="TextureRect"]
+layout_mode = 0
+offset_left = 67.0
+offset_top = 42.0
+offset_right = 112.0
+offset_bottom = 83.0
+texture = ExtResource("3_13epk")
+expand_mode = 1
+
+[node name="HealthHUD" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -147.0
+offset_top = -77.0
+offset_right = 11.0
+offset_bottom = 117.0
+grow_horizontal = 0
+texture = ExtResource("5_qy3jh")
+expand_mode = 1
+
+[node name="HealthLabel" type="Label" parent="HealthHUD"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -47.0
+offset_top = 95.0
+offset_right = -19.0
+offset_bottom = 108.0
+grow_horizontal = 0
+theme_override_colors/font_outline_color = Color(0.20990813, 0.20990813, 0.2099081, 1)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("3_6awip")
+theme_override_font_sizes/font_size = 10
+text = "100/100"
+vertical_alignment = 1
+
+[node name="hearts" type="TextureRect" parent="HealthHUD"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 80.0
+offset_right = 46.0
+offset_bottom = 120.0
+texture = ExtResource("6_80dm8")
+expand_mode = 1
+
+[node name="Bar1" type="TextureRect" parent="HealthHUD"]
+layout_mode = 0
+offset_left = 58.0
+offset_top = 89.55408
+offset_right = 81.0
+offset_bottom = 109.55408
+rotation = 1.5707964
+texture = ExtResource("7_hvbbi")
+expand_mode = 1
+
+[node name="Bar2" type="TextureRect" parent="HealthHUD"]
+layout_mode = 0
+offset_left = 63.0
+offset_top = 89.553955
+offset_right = 86.0
+offset_bottom = 109.553955
+rotation = 1.5707964
+texture = ExtResource("7_hvbbi")
+expand_mode = 1
+
+[node name="Bar3" type="TextureRect" parent="HealthHUD"]
+layout_mode = 0
+offset_left = 68.0
+offset_top = 89.553955
+offset_right = 91.0
+offset_bottom = 109.553955
+rotation = 1.5707964
+texture = ExtResource("7_hvbbi")
+expand_mode = 1
+
+[node name="Bar4" type="TextureRect" parent="HealthHUD"]
+layout_mode = 0
+offset_left = 73.0
+offset_top = 89.553955
+offset_right = 96.0
+offset_bottom = 109.553955
+rotation = 1.5707964
+texture = ExtResource("7_hvbbi")
+expand_mode = 1
+
+[node name="Bar5" type="TextureRect" parent="HealthHUD"]
+layout_mode = 0
+offset_left = 78.0
+offset_top = 89.553955
+offset_right = 101.0
+offset_bottom = 109.553955
+rotation = 1.5707964
+texture = ExtResource("7_hvbbi")
+expand_mode = 1
+
+[node name="Bar6" type="TextureRect" parent="HealthHUD"]
+layout_mode = 0
+offset_left = 83.0
+offset_top = 89.55408
+offset_right = 106.0
+offset_bottom = 109.55408
+rotation = 1.5707964
+texture = ExtResource("7_hvbbi")
+expand_mode = 1
+
+[node name="Bar7" type="TextureRect" parent="HealthHUD"]
+layout_mode = 0
+offset_left = 88.0
+offset_top = 89.553955
+offset_right = 111.0
+offset_bottom = 109.553955
+rotation = 1.5707964
+texture = ExtResource("7_hvbbi")
+expand_mode = 1
+
+[node name="Bar8" type="TextureRect" parent="HealthHUD"]
+layout_mode = 0
+offset_left = 93.0
+offset_top = 89.553955
+offset_right = 116.0
+offset_bottom = 109.553955
+rotation = 1.5707964
+texture = ExtResource("7_hvbbi")
+expand_mode = 1
+
+[node name="Bar9" type="TextureRect" parent="HealthHUD"]
+layout_mode = 0
+offset_left = 98.0
+offset_top = 89.553955
+offset_right = 121.0
+offset_bottom = 109.553955
+rotation = 1.5707964
+texture = ExtResource("7_hvbbi")
+expand_mode = 1
+
+[node name="Bar10" type="TextureRect" parent="HealthHUD"]
+layout_mode = 0
+offset_left = 103.0
+offset_top = 89.553955
+offset_right = 126.0
+offset_bottom = 109.553955
+rotation = 1.5707964
+texture = ExtResource("7_hvbbi")
+expand_mode = 1

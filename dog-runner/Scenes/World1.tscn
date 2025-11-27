@@ -1,0 +1,350 @@
+[gd_scene load_steps=23 format=3 uid="uid://2uu4plvr1rnt"]
+
+[ext_resource type="Script" uid="uid://blsuft1qw71ns" path="res://Scripts/ProceduralGeneration/WorldGenerator.gd" id="1_kn0k0"]
+[ext_resource type="Texture2D" uid="uid://bu4uvyas1o5hg" path="res://Assets/Skybox/kloofendal_48d_partly_cloudy_puresky_2k.exr" id="2_kmt4t"]
+[ext_resource type="PackedScene" uid="uid://p0yomltie1ir" path="res://Scenes/Character/dog.tscn" id="3_d304e"]
+[ext_resource type="PackedScene" uid="uid://bvwgq8x7n2k3r" path="res://Scenes/UI/PlayerHUD.tscn" id="4_mjbhr"]
+[ext_resource type="Texture2D" uid="uid://crsrcqejvjq1d" path="res://Assets/GUI/NavBar.png" id="5_x6xud"]
+[ext_resource type="Texture2D" uid="uid://cbqsh281craul" path="res://Assets/GUI/missonHud.png" id="6_mjbhr"]
+[ext_resource type="Texture2D" uid="uid://dx5jhuhmu7ll0" path="res://Assets/GUI/home_clicked.png" id="6_wea1w"]
+[ext_resource type="Texture2D" uid="uid://b6iwxgbyekua8" path="res://Assets/GUI/Dog_Customization_clicked.png" id="6_x6xud"]
+[ext_resource type="FontFile" uid="uid://dfosvfwyibpv5" path="res://Assets/Font/Gotham Bold.otf" id="7_x6xud"]
+[ext_resource type="Texture2D" uid="uid://bdgmq5tip8t3h" path="res://Assets/GUI/SettingsClick.png" id="8_2xybp"]
+[ext_resource type="Texture2D" uid="uid://x3pfbrhwnk5n" path="res://Assets/GUI/Misson_Clicked.png" id="8_051au"]
+[ext_resource type="Texture2D" uid="uid://bossws7m5j44p" path="res://Assets/GUI/coin.png" id="8_wea1w"]
+[ext_resource type="Texture2D" uid="uid://dbnw333n3xw57" path="res://Assets/GUI/MissonPlaceHolder.png" id="13_h7tex"]
+[ext_resource type="Texture2D" uid="uid://wvh1wu8frthh" path="res://Assets/GUI/MissonText.png" id="14_hjjf3"]
+[ext_resource type="FontFile" uid="uid://cpq50no1ckp3x" path="res://Assets/Font/Montserrat-Medium.ttf" id="15_pba8y"]
+[ext_resource type="Texture2D" uid="uid://bxj8jibvnrpnt" path="res://Assets/GUI/hearts.png" id="16_o61tu"]
+[ext_resource type="Texture2D" uid="uid://cjv1dr4sd2p2w" path="res://Assets/GUI/close-removebg.png" id="17_hjjf3"]
+[ext_resource type="PackedScene" uid="uid://d1o5w0hssk6b1" path="res://Scenes/UI/victory.tscn" id="18_pba8y"]
+
+[sub_resource type="Shader" id="Shader_aq407"]
+code = "
+// NOTE: Shader automatically converted from Godot Engine 4.5.stable's PanoramaSkyMaterial.
+
+shader_type sky;
+
+uniform sampler2D source_panorama : filter_linear, source_color, hint_default_black;
+uniform float exposure : hint_range(0, 128) = 1.0;
+uniform float speed = 0.002;
+
+void sky() {
+	vec2 skyCords = vec2(SKY_COORDS.x + TIME * speed, SKY_COORDS.y );
+	COLOR = texture(source_panorama, skyCords).rgb * exposure;
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5gbqf"]
+shader = SubResource("Shader_aq407")
+shader_parameter/source_panorama = ExtResource("2_kmt4t")
+shader_parameter/exposure = 1.0
+shader_parameter/speed = 0.004
+
+[sub_resource type="Sky" id="Sky_8qjj4"]
+sky_material = SubResource("ShaderMaterial_5gbqf")
+
+[sub_resource type="Environment" id="Environment_5gbqf"]
+background_mode = 2
+sky = SubResource("Sky_8qjj4")
+
+[node name="WorldGenerator" type="Node3D"]
+process_mode = 1
+script = ExtResource("1_kn0k0")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_5gbqf")
+
+[node name="player" parent="." instance=ExtResource("3_d304e")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -0.2, 0, 7.529)
+
+[node name="PlayerHUD" parent="." instance=ExtResource("4_mjbhr")]
+offset_left = -3.0
+
+[node name="roadHolder" type="Node3D" parent="."]
+
+[node name="NavBar" type="Control" parent="."]
+process_mode = 1
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="NavBar"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -306.0
+offset_top = -393.0
+offset_right = 306.0
+offset_bottom = 15.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = ExtResource("5_x6xud")
+
+[node name="Misson" type="Button" parent="NavBar"]
+layout_mode = 0
+offset_left = 591.0
+offset_top = 582.0
+offset_right = 634.0
+offset_bottom = 629.0
+flat = true
+expand_icon = true
+
+[node name="Settings" type="Button" parent="NavBar"]
+layout_mode = 0
+offset_left = 658.0
+offset_top = 584.0
+offset_right = 699.0
+offset_bottom = 629.0
+flat = true
+expand_icon = true
+
+[node name="CustomizeClicked" type="Button" parent="NavBar"]
+visible = false
+layout_mode = 0
+offset_left = 422.0
+offset_top = 540.0
+offset_right = 779.0
+offset_bottom = 668.0
+icon = ExtResource("6_x6xud")
+flat = true
+expand_icon = true
+
+[node name="HomeClicked" type="Button" parent="NavBar"]
+layout_mode = 0
+offset_left = 354.0
+offset_top = 540.0
+offset_right = 711.0
+offset_bottom = 668.0
+icon = ExtResource("6_wea1w")
+flat = true
+expand_icon = true
+
+[node name="SettingsClicked" type="Button" parent="NavBar"]
+visible = false
+layout_mode = 0
+offset_left = 556.0
+offset_top = 540.0
+offset_right = 913.0
+offset_bottom = 668.0
+icon = ExtResource("8_2xybp")
+flat = true
+expand_icon = true
+
+[node name="MissonClicked" type="Button" parent="NavBar"]
+visible = false
+layout_mode = 0
+offset_left = 490.0
+offset_top = 540.0
+offset_right = 847.0
+offset_bottom = 668.0
+icon = ExtResource("8_051au")
+flat = true
+expand_icon = true
+
+[node name="Customize" type="Button" parent="NavBar"]
+layout_mode = 0
+offset_left = 524.0
+offset_top = 580.0
+offset_right = 561.0
+offset_bottom = 629.0
+flat = true
+expand_icon = true
+
+[node name="home" type="Button" parent="NavBar"]
+layout_mode = 0
+offset_left = 453.0
+offset_top = 583.0
+offset_right = 499.0
+offset_bottom = 630.0
+flat = true
+
+[node name="Misson" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -5.0
+offset_right = -5.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="Misson"]
+layout_mode = 1
+offset_left = -24.0
+offset_top = -138.0
+offset_right = 476.0
+offset_bottom = 362.0
+texture = ExtResource("6_mjbhr")
+
+[node name="Label" type="Label" parent="Misson/TextureRect"]
+layout_mode = 0
+offset_left = 104.0
+offset_top = 172.0
+offset_right = 386.0
+offset_bottom = 202.0
+theme_override_fonts/font = ExtResource("7_x6xud")
+theme_override_font_sizes/font_size = 30
+text = "MISSON BREIFING"
+
+[node name="Label2" type="Label" parent="Misson/TextureRect"]
+layout_mode = 0
+offset_left = 128.0
+offset_top = 215.0
+offset_right = 410.0
+offset_bottom = 245.0
+theme_override_colors/font_color = Color(1, 1, 0.34509805, 1)
+theme_override_fonts/font = ExtResource("7_x6xud")
+theme_override_font_sizes/font_size = 25
+text = "COLLECT 20 COINS"
+
+[node name="Label3" type="Label" parent="Misson/TextureRect"]
+layout_mode = 0
+offset_left = 128.0
+offset_top = 249.0
+offset_right = 410.0
+offset_bottom = 279.0
+theme_override_colors/font_color = Color(0.963718, 0.9558938, 1, 1)
+theme_override_fonts/font = ExtResource("7_x6xud")
+theme_override_font_sizes/font_size = 15
+text = "Avoid Obstacles
+Reach the Finish Line"
+
+[node name="Coin" type="Sprite2D" parent="Misson/TextureRect"]
+position = Vector2(82, 244)
+scale = Vector2(0.113, 0.10300005)
+texture = ExtResource("8_wea1w")
+
+[node name="MissonScreen" type="Control" parent="."]
+process_mode = 1
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="MissonScreen"]
+layout_mode = 1
+offset_left = -268.0
+offset_top = -105.0
+offset_right = 699.0
+offset_bottom = 453.0
+texture = ExtResource("13_h7tex")
+expand_mode = 1
+
+[node name="Label" type="Label" parent="MissonScreen/TextureRect"]
+layout_mode = 0
+offset_left = 334.0
+offset_top = 183.0
+offset_right = 487.0
+offset_bottom = 213.0
+theme_override_colors/font_color = Color(0.42745098, 1, 1, 1)
+theme_override_fonts/font = ExtResource("7_x6xud")
+theme_override_font_sizes/font_size = 30
+text = "MISSIONS"
+
+[node name="TextureRect" type="TextureRect" parent="MissonScreen/TextureRect"]
+layout_mode = 0
+offset_left = 119.0
+offset_top = 137.0
+offset_right = 850.0
+offset_bottom = 524.0
+texture = ExtResource("14_hjjf3")
+expand_mode = 1
+
+[node name="Label" type="Label" parent="MissonScreen/TextureRect/TextureRect"]
+layout_mode = 0
+offset_left = 245.0
+offset_top = 120.0
+offset_right = 353.0
+offset_bottom = 145.0
+theme_override_colors/font_color = Color(0.42745098, 1, 1, 1)
+theme_override_fonts/font = ExtResource("7_x6xud")
+theme_override_font_sizes/font_size = 25
+text = "COIN"
+
+[node name="Label2" type="Label" parent="MissonScreen/TextureRect/TextureRect"]
+layout_mode = 0
+offset_left = 244.0
+offset_top = 146.0
+offset_right = 352.0
+offset_bottom = 166.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("15_pba8y")
+theme_override_font_sizes/font_size = 17
+text = "Collect 20 coins"
+
+[node name="Coin" type="Sprite2D" parent="MissonScreen/TextureRect/TextureRect"]
+position = Vector2(227, 143.75)
+scale = Vector2(0.063999996, 0.066999994)
+texture = ExtResource("8_wea1w")
+
+[node name="TextureRect2" type="TextureRect" parent="MissonScreen/TextureRect"]
+layout_mode = 0
+offset_left = 119.0
+offset_top = 241.0
+offset_right = 850.0
+offset_bottom = 628.0
+texture = ExtResource("14_hjjf3")
+expand_mode = 1
+
+[node name="Label" type="Label" parent="MissonScreen/TextureRect/TextureRect2"]
+layout_mode = 0
+offset_left = 245.0
+offset_top = 120.0
+offset_right = 353.0
+offset_bottom = 145.0
+theme_override_colors/font_color = Color(0.42745098, 1, 1, 1)
+theme_override_fonts/font = ExtResource("7_x6xud")
+theme_override_font_sizes/font_size = 25
+text = "HEALTH"
+
+[node name="Label2" type="Label" parent="MissonScreen/TextureRect/TextureRect2"]
+layout_mode = 0
+offset_left = 244.0
+offset_top = 146.0
+offset_right = 352.0
+offset_bottom = 166.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("15_pba8y")
+theme_override_font_sizes/font_size = 17
+text = "Keep Health above 1"
+
+[node name="Coin" type="Sprite2D" parent="MissonScreen/TextureRect/TextureRect2"]
+position = Vector2(225.5, 145.5)
+scale = Vector2(0.094000004, 0.10999999)
+texture = ExtResource("16_o61tu")
+
+[node name="CloseMisson" type="Button" parent="MissonScreen"]
+layout_mode = 0
+offset_left = -37.0
+offset_top = -7.0
+offset_right = 221.0
+offset_bottom = 67.0
+icon = ExtResource("17_hjjf3")
+flat = true
+expand_icon = true
+
+[node name="Victory" parent="." instance=ExtResource("18_pba8y")]
+visible = false
+
+[connection signal="pressed" from="NavBar/Misson" to="." method="_on_misson_pressed"]
+[connection signal="pressed" from="NavBar/Settings" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="NavBar/CustomizeClicked" to="." method="_on_customize_clicked_pressed"]
+[connection signal="pressed" from="NavBar/SettingsClicked" to="." method="_on_settings_clicked_pressed"]
+[connection signal="pressed" from="NavBar/MissonClicked" to="." method="_on_misson_clicked_pressed"]
+[connection signal="pressed" from="NavBar/Customize" to="." method="_on_customize_pressed"]
+[connection signal="pressed" from="NavBar/home" to="." method="_on_home_clicked_pressed"]
+[connection signal="pressed" from="MissonScreen/CloseMisson" to="." method="_on_close_misson_pressed"]
