@@ -1,0 +1,52 @@
+[gd_scene load_steps=10 format=3 uid="uid://eak2r2fanw1v"]
+
+[ext_resource type="PackedScene" uid="uid://0oxwtgn6xnp8" path="res://Scenes/Enviroment/World2/corridor1.tscn" id="1_8dsjy"]
+[ext_resource type="Texture2D" uid="uid://bu4uvyas1o5hg" path="res://Assets/Skybox/kloofendal_48d_partly_cloudy_puresky_2k.exr" id="3_8dsjy"]
+[ext_resource type="PackedScene" uid="uid://cf5ff13cnq3u1" path="res://Scenes/Enviroment/World2/corridor4.tscn" id="3_cqr7o"]
+[ext_resource type="PackedScene" uid="uid://p0yomltie1ir" path="res://Scenes/Character/dog.tscn" id="3_j0eba"]
+[ext_resource type="Script" uid="uid://dfch1q835wyi6" path="res://Scripts/ProceduralGeneration/World2Generator.gd" id="4_generator"]
+
+[sub_resource type="Shader" id="Shader_aq407"]
+code = "
+// NOTE: Shader automatically converted from Godot Engine 4.5.stable's PanoramaSkyMaterial.
+
+shader_type sky;
+
+uniform sampler2D source_panorama : filter_linear, source_color, hint_default_black;
+uniform float exposure : hint_range(0, 128) = 1.0;
+uniform float speed = 0.002;
+
+void sky() {
+	vec2 skyCords = vec2(SKY_COORDS.x + TIME * speed, SKY_COORDS.y );
+	COLOR = texture(source_panorama, skyCords).rgb * exposure;
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nnd0m"]
+shader = SubResource("Shader_aq407")
+shader_parameter/source_panorama = ExtResource("3_8dsjy")
+shader_parameter/exposure = 1.0
+shader_parameter/speed = 0.004
+
+[sub_resource type="Sky" id="Sky_8qjj4"]
+sky_material = SubResource("ShaderMaterial_nnd0m")
+
+[sub_resource type="Environment" id="Environment_j0eba"]
+background_mode = 2
+sky = SubResource("Sky_8qjj4")
+
+[node name="world2" type="Node3D" node_paths=PackedStringArray("dog_character")]
+script = ExtResource("4_generator")
+corridor_scene = ExtResource("1_8dsjy")
+turn_corridor_scene = ExtResource("3_cqr7o")
+dog_character = NodePath("player")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+shadow_enabled = true
+
+[node name="player" parent="." instance=ExtResource("3_j0eba")]
+transform = Transform3D(-8.742278e-08, 0, -2, 0, 2, 0, 2, 0, -8.742278e-08, -7.460426, 2.4341393, -11.165039)
+
+[node name="WorldEnvironment2" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_j0eba")

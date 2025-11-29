@@ -214,11 +214,11 @@ func _process(delta):
 		# Check if we need to spawn more roads (this also handles removal)
 		_check_and_spawn_roads()
 
-func _input(event):
+#func _input(event):
 	# Check for ESC key to close mission screen (works even when paused)
-	if event.is_action_pressed("ui_cancel") and is_game_paused:
-		print("ESC pressed - closing mission screen")
-		_hide_mission_screen()
+	#if event.is_action_pressed("ui_cancel") and is_game_paused:
+		#print("ESC pressed - closing mission screen")
+		#_hide_mission_screen()
 
 func _update_time_based_difficulty():
 	# Increase difficulty every 20 seconds

@@ -1,0 +1,34 @@
+[gd_scene load_steps=7 format=3 uid="uid://dp861x1n50oiy"]
+
+[ext_resource type="PackedScene" uid="uid://0oxwtgn6xnp8" path="res://Scenes/Enviroment/World2/corridor1.tscn" id="1_bive4"]
+[ext_resource type="PackedScene" uid="uid://cf5ff13cnq3u1" path="res://Scenes/Enviroment/World2/corridor4.tscn" id="2_628el"]
+[ext_resource type="PackedScene" uid="uid://p0yomltie1ir" path="res://Scenes/Character/dog.tscn" id="3_628el"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_45krh"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_is5g5"]
+sky_material = SubResource("ProceduralSkyMaterial_45krh")
+
+[sub_resource type="Environment" id="Environment_r06vr"]
+background_mode = 2
+sky = SubResource("Sky_is5g5")
+tonemap_mode = 2
+
+[node name="Node3D" type="Node3D"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_r06vr")
+
+[node name="corridor1" parent="." instance=ExtResource("1_bive4")]
+
+[node name="player" parent="." instance=ExtResource("3_628el")]
+transform = Transform3D(-8.742278e-08, 0, -2, 0, 2, 0, 2, 0, -8.742278e-08, -7.02361, 2, 32)
+
+[node name="Corridor4" parent="." instance=ExtResource("2_628el")]
+transform = Transform3D(5.1, 0, 0, 0, 4.2, 0, 0, 0, 5, -7.15, 5.54, -66.255)

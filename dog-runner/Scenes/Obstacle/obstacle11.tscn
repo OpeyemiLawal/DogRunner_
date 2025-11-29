@@ -44,9 +44,9 @@ blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_kaa2i")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_roy2u"]
-size = Vector3(5.6904297, 2.72937, 3.0140839)
+size = Vector3(6, 2.72937, 3.0140839)
 
-[node name="StaticBody3D" type="StaticBody3D"]
+[node name="StaticBody3D" type="StaticBody3D" groups=["obstacle"]]
 script = ExtResource("1_x3cl7")
 
 [node name="FL WHEEL_003_BODY_017_0" type="MeshInstance3D" parent="."]
@@ -54,7 +54,7 @@ mesh = SubResource("ArrayMesh_x3cl7")
 skeleton = NodePath("")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3452148, 0.86468506, 1.2921371)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.1904297, 0.86468506, 1.2921371)
 shape = SubResource("BoxShape3D_roy2u")
 
 [node name="WallDetector" type="Area3D" parent="."]
