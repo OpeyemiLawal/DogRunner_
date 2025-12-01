@@ -4,6 +4,29 @@ extends Node3D
 @export var corridor_scene: PackedScene
 @export var turn_corridor_scene: PackedScene  # For corridor4 (turn corridor)
 @export var dog_character: CharacterBody3D
+@export var corridor2_scene: PackedScene
+
+# Coin spawning variables
+@export var coin_scene: PackedScene
+const COIN_SPAWN_CHANCE = 0.8  # 80% chance to spawn coins per corridor (same as World 1)
+const MAX_COINS_PER_CORRIDOR = 8  # Maximum 8 coins per corridor (same as World 1)
+
+# Coin lane positions - exactly matching World 1
+const COIN_LEFT_OFFSET = -6.0   # Same as World 1
+const COIN_MIDDLE_OFFSET = 0.0  # Same as World 1
+const COIN_RIGHT_OFFSET = 6.0    # Same as World 1
+
+# Professional zig-zag patterns
+const ZIG_ZAG_PATTERNS = [
+	[0, 1, 0, -1, 0],           # Middle-Right-Middle-Left-Middle
+	[-1, 0, 1, 0, -1],          # Left-Middle-Right-Middle-Left
+	[1, 0, -1, 0, 1],           # Right-Middle-Left-Middle-Right
+	[0, -1, 1, -1, 0],          # Middle-Left-Right-Left-Middle
+	[1, 1, 0, -1, -1],          # Right-Right-Middle-Left-Left
+	[-1, -1, 0, 1, 1],          # Left-Left-Middle-Right-Right
+	[0, 0, 1, 0, 0],            # Middle-Middle-Right-Middle-Middle
+	[0, 0, -1, 0, 0],           # Middle-Middle-Left-Middle-Middle
+]
 
 # Generation parameters
 const MAX_CORRIDORS = 10
@@ -14,6 +37,7 @@ const CORRIDORS_AHEAD = 2  # Always keep 2 corridors ahead of the player
 
 # State variables
 var active_corridors: Array[Node3D] = []
+var active_collectibles: Array[Node3D] = []
 var next_spawn_position: Vector3 = Vector3.ZERO
 var next_end_position: Vector3 = Vector3.ZERO
 var current_rotation: float = 0.0
@@ -39,9 +63,20 @@ func _physics_process(delta):
 	if not player:
 		return
 	
-	# Debug player position (very infrequently)
-	if Engine.get_frames_drawn() % 600 == 0:  # Print every 10 seconds (assuming 60 FPS)
-		print("Player pos: ", player.global_position, " | Active corridors: ", active_corridors.size())
+	# Debug player position and lane changing
+	if Engine.get_frames_drawn() % 120 == 0:  # Print every 2 seconds (assuming 60 FPS)
+		print("=== DEBUG INFO ===")
+		print("Player pos: ", player.global_position)
+		print("Player forward: ", player.forward_direction if player.has_method("get") else "N/A")
+		print("Active corridors: ", active_corridors.size())
+		print("Active coins: ", active_collectibles.size())
+		
+		# Show coin positions
+		for i in range(min(3, active_collectibles.size())):
+			var coin = active_collectibles[i]
+			if is_instance_valid(coin):
+				print("Coin ", i+1, " pos: ", coin.global_position)
+		print("================")
 	
 	# Check if we need to spawn new corridor
 	# Get the first corridor's end position for spawning trigger
@@ -53,8 +88,9 @@ func _physics_process(delta):
 	if player_distance_to_first < SPAWN_DISTANCE and active_corridors.size() < MAX_CORRIDORS:
 		spawn_next_corridor()
 	
-	# Clean up corridors that are too far behind
+	# Clean up old corridors and coins
 	cleanup_old_corridors()
+	cleanup_old_coins()
 
 func spawn_initial_corridors():
 	# Spawn the first corridor
@@ -100,6 +136,9 @@ func spawn_initial_corridor():
 		next_spawn_position = end_world_pos
 		next_end_position = next_spawn_position
 		
+		# Spawn coins on this corridor
+		_spawn_coins_on_corridor(corridor.global_position)
+		
 		# Position player at the start of the first corridor
 		if player:
 			player.global_position = Vector3(0, 1.0, 1.0)  # Start near the beginning, facing +Z direction
@@ -111,70 +150,63 @@ func spawn_initial_corridor():
 			player.velocity = player.forward_direction * 10.0
 
 func spawn_next_corridor():
-	# Get the last corridor's end point
-	var last_corridor = active_corridors[-1]
-	var last_end_marker = last_corridor.get_node("EndPoint")
-	
-	if not last_end_marker:
+	if not player:
 		return
 	
-	# Get the world position of the last corridor's end point
+	print("=== SPAWNING NEXT CORRIDOR ===")
+	print("Current spawn_counter: ", spawn_counter)
+	
+	var last_corridor = active_corridors[-1]
+	var last_end_marker = last_corridor.get_node("EndPoint")
+	if not last_end_marker:
+		return
+
 	var last_end_world_pos = last_end_marker.global_position
-	
-	# Spawn corridor1 then corridor2, then repeat
 	spawn_counter += 1
-	var should_spawn_corridor2 = (spawn_counter % 2 == 0)  # Even numbers spawn corridor2
-	var corridor_to_spawn = corridor_scene
-	
-	# Load corridor2 directly from file when needed
-	if should_spawn_corridor2:
-		var corridor2_scene = load("res://Scenes/Enviroment/World2/corridor2.tscn")
-		if corridor2_scene:
-			corridor_to_spawn = corridor2_scene
-		else:
-			print("ERROR: Could not load corridor2.tscn!")
-	
-	# Spawn new corridor
+
+	# Pick corridor to spawn
+	var corridor_to_spawn: PackedScene
+	if spawn_counter == 1:
+		corridor_to_spawn = corridor2_scene           # corridor 2 (only first spawn)
+		print("Spawning corridor2 (spawn_counter=1)")
+	else:
+		corridor_to_spawn = corridor_scene            # corridor 1 (all other spawns)
+		print("Spawning corridor1 (spawn_counter=", spawn_counter, ")")
+
 	var new_corridor = corridor_to_spawn.instantiate()
 	add_child(new_corridor)
-	
-	# Debug: Show what was spawned for first few spawns
-	if spawn_counter <= 4:
-		print("Spawn ", spawn_counter, ": ", "CORRIDOR2" if should_spawn_corridor2 else "CORRIDOR1")
-		print("Final position: ", new_corridor.global_position)
-	
-	# Get the new corridor's start and end points
+
+	# ROTATION LOGIC - rotate corridor1 once and keep same rotation for all后续 corridor1
+	if spawn_counter >= 2:  # All corridor1 spawns after corridor2
+		new_corridor.rotation_degrees.y -= 90
+		current_rotation -= deg_to_rad(90)
+		print("Applied -90 degree rotation, current_rotation: ", current_rotation, " (", rad_to_deg(current_rotation), " degrees)")
+
+	# POSITIONING
 	var new_start_marker = new_corridor.get_node("StartPoint")
 	var new_end_marker = new_corridor.get_node("EndPoint")
+
+	new_corridor.global_position = Vector3.ZERO
+	var new_start_world_pos = new_start_marker.global_position
+	var offset = last_end_world_pos - new_start_world_pos
+	new_corridor.global_position = offset
+
+	# Recalculate end position after positioning
+	var new_end_world_pos = new_end_marker.global_position
+	next_spawn_position = new_end_world_pos
+
+	print("Corridor positioned at: ", new_corridor.global_position)
+	print("Next spawn position updated to: ", next_spawn_position)
+
+	active_corridors.append(new_corridor)
 	
-	if new_start_marker and new_end_marker:
-		# Position the new corridor at origin first to get marker positions
-		new_corridor.global_position = Vector3.ZERO
-		
-		# Get the world positions of the markers
-		var new_start_world_pos = new_start_marker.global_position
-		var new_end_world_pos = new_end_marker.global_position
-		
-		# Calculate offset to align new corridor's start with last corridor's end
-		var offset = last_end_world_pos - new_start_world_pos
-		
-		# Position the new corridor
-		new_corridor.global_position = offset
-		active_corridors.append(new_corridor)
-		
-		# Get final positions for straight corridor
-		new_start_world_pos = new_start_marker.global_position
-		new_end_world_pos = new_end_marker.global_position
-		
-		# Debug: Show what was spawned for first few spawns
-		if spawn_counter <= 4:
-			print("Spawn ", spawn_counter, ": ", "CORRIDOR2" if should_spawn_corridor2 else "CORRIDOR1")
-			print("Final position: ", new_corridor.global_position)
-			print("End point for next spawn: ", new_end_world_pos)
-		
-		# Update next spawn position
-		next_spawn_position = new_end_world_pos
-		next_end_position = next_spawn_position
+	# Spawn coins on this corridor
+	print("About to spawn coins on corridor ", spawn_counter)
+	_spawn_coins_on_corridor(new_corridor.global_position)
+	
+	print("Corridor added. Active corridors: ", active_corridors.size())
+	print("==========================")
+
 
 func cleanup_old_corridors():
 	if not player:
@@ -215,3 +247,118 @@ func get_current_end_point():
 		if end_marker:
 			return end_marker.global_position
 	return Vector3.ZERO
+
+func _spawn_coins_on_corridor(corridor_position: Vector3):
+	if not coin_scene:
+		print("ERROR: No coin scene assigned!")
+		return
+		
+	print("=== COIN SPAWN DEBUG ===")
+	print("Spawn counter: ", spawn_counter)
+	print("Active corridors: ", active_corridors.size())
+	print("Coin scene valid: ", coin_scene != null)
+	
+	var coin_roll = rng.randf()
+	print("Coin spawn roll: ", coin_roll, " (need < ", COIN_SPAWN_CHANCE, " to spawn)")
+	
+	if coin_roll < COIN_SPAWN_CHANCE:
+		# Choose a professional zig-zag pattern
+		var pattern_index = rng.randi() % ZIG_ZAG_PATTERNS.size()
+		var pattern = ZIG_ZAG_PATTERNS[pattern_index]
+		var num_coins = pattern.size()
+		
+		print("Spawning ", num_coins, " coins with ZIG-ZAG pattern ", pattern_index, ": ", pattern)
+		print("Pattern: ", _get_pattern_description(pattern))
+		
+		for i in range(num_coins):
+			var lane = pattern[i]  # Use pattern instead of random
+			var forward_offset = 20.0 + i * 25.0  # More spread out - start at 20, 25 units apart
+			
+			# Use specific coin lane offsets
+			var lane_offset = 0.0
+			var lane_name = ""
+			match lane:
+				-1:  # Left lane
+					lane_offset = COIN_LEFT_OFFSET
+					lane_name = "LEFT"
+				0:   # Middle lane
+					lane_offset = COIN_MIDDLE_OFFSET
+					lane_name = "MIDDLE"
+				1:   # Right lane
+					lane_offset = COIN_RIGHT_OFFSET
+					lane_name = "RIGHT"
+			
+			# Create coin instance
+			var coin_instance = coin_scene.instantiate()
+			
+			# Calculate world position based on current rotation
+			var forward_dir = Vector3.FORWARD.rotated(Vector3.UP, current_rotation)
+			var right_dir = forward_dir.cross(Vector3.UP).normalized()
+			
+			# Start with corridor position but adjust height to player level (reduced)
+			var base_position = corridor_position
+			base_position.y = 0.5  # Reduced from 1.0 for better visual height
+			
+			# Apply rotation-aware positioning
+			var world_pos = base_position + forward_dir * forward_offset + right_dir * lane_offset
+			
+			print("Coin ", i+1, ": lane=", lane_name, " forward_offset=", forward_offset, " lane_offset=", lane_offset)
+			print("Coin ", i+1, ": corridor_pos=", corridor_position, " base_pos=", base_position)
+			print("Coin ", i+1, ": current_rotation=", current_rotation, " (", rad_to_deg(current_rotation), " degrees)")
+			print("Coin ", i+1, ": forward_dir=", forward_dir, " right_dir=", right_dir)
+			print("Coin ", i+1, ": calculated world_pos=", world_pos)
+			
+			# Add to scene and set position
+			add_child(coin_instance)
+			coin_instance.global_position = world_pos
+			coin_instance.global_rotation.y = current_rotation
+			
+			print("Coin ", i+1, ": final position=", coin_instance.global_position)
+			
+			# Track the coin
+			active_collectibles.append(coin_instance)
+		
+		print("Total coins after spawn: ", active_collectibles.size())
+		print("=======================")
+	else:
+		print("No coins spawned this corridor")
+		print("=======================")
+
+func _get_pattern_description(pattern: Array) -> String:
+	var description = ""
+	for i in range(pattern.size()):
+		var lane = pattern[i]
+		var lane_name = ""
+		match lane:
+			-1: lane_name = "L"
+			0: lane_name = "M"
+			1: lane_name = "R"
+		
+		if i == 0:
+			description = lane_name
+		else:
+			description += "-" + lane_name
+	
+	return description
+
+func cleanup_old_coins():
+	if not player:
+		return
+	
+	# Use a simple while loop to safely remove invalid coins
+	var i = 0
+	while i < active_collectibles.size():
+		var coin = active_collectibles[i]
+		
+		# Remove invalid or distant coins
+		if not coin or not is_instance_valid(coin):
+			active_collectibles.remove_at(i)
+			continue
+			
+		var distance = player.global_position.distance_to(coin.global_position)
+		if distance > DESPAWN_DISTANCE:
+			coin.queue_free()
+			active_collectibles.remove_at(i)
+			continue
+			
+		i += 1
