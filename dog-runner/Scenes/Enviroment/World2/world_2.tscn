@@ -1,11 +1,10 @@
-[gd_scene load_steps=26 format=3 uid="uid://eak2r2fanw1v"]
+[gd_scene load_steps=25 format=3 uid="uid://eak2r2fanw1v"]
 
 [ext_resource type="PackedScene" uid="uid://0oxwtgn6xnp8" path="res://Scenes/Enviroment/World2/corridor1.tscn" id="1_8dsjy"]
 [ext_resource type="Texture2D" uid="uid://bu4uvyas1o5hg" path="res://Assets/Skybox/kloofendal_48d_partly_cloudy_puresky_2k.exr" id="3_8dsjy"]
 [ext_resource type="PackedScene" uid="uid://21mbmwy4l5l0" path="res://Scenes/Enviroment/World2/corridor2.tscn" id="3_cqr7o"]
 [ext_resource type="PackedScene" uid="uid://p0yomltie1ir" path="res://Scenes/Character/dog.tscn" id="3_j0eba"]
 [ext_resource type="Script" uid="uid://dfch1q835wyi6" path="res://Scripts/ProceduralGeneration/World2Generator.gd" id="4_generator"]
-[ext_resource type="PackedScene" uid="uid://c2rvcc5c8b3th" path="res://Scenes/Collectiables/coin.tscn" id="4_j6l5k"]
 [ext_resource type="Texture2D" uid="uid://crsrcqejvjq1d" path="res://Assets/GUI/NavBar.png" id="7_j6l5k"]
 [ext_resource type="Texture2D" uid="uid://b6iwxgbyekua8" path="res://Assets/GUI/Dog_Customization_clicked.png" id="8_iinix"]
 [ext_resource type="Texture2D" uid="uid://dx5jhuhmu7ll0" path="res://Assets/GUI/home_clicked.png" id="9_cu08g"]
@@ -56,7 +55,6 @@ script = ExtResource("4_generator")
 corridor_scene = ExtResource("1_8dsjy")
 dog_character = NodePath("player")
 corridor2_scene = ExtResource("3_cqr7o")
-coin_scene = ExtResource("4_j6l5k")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)

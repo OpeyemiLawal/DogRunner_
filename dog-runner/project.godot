@@ -13,6 +13,7 @@ config_version=5
 config/name="DogRunner"
 run/main_scene="uid://eak2r2fanw1v"
 config/features=PackedStringArray("4.5", "GL Compatibility")
+boot_splash/image="uid://cnx3rnymrm0lm"
 config/icon="res://icon.svg"
 
 [display]

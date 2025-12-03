@@ -1,12 +1,15 @@
-[gd_scene load_steps=3 format=3 uid="uid://dp861x1n50oiy"]
+[gd_scene load_steps=4 format=3 uid="uid://dp861x1n50oiy"]
 
 [ext_resource type="PackedScene" uid="uid://21mbmwy4l5l0" path="res://Scenes/Enviroment/World2/corridor2.tscn" id="1_628el"]
 [ext_resource type="PackedScene" uid="uid://0oxwtgn6xnp8" path="res://Scenes/Enviroment/World2/corridor1.tscn" id="1_bive4"]
+[ext_resource type="PackedScene" uid="uid://p0yomltie1ir" path="res://Scenes/Character/dog.tscn" id="3_628el"]
 
 [node name="Node3D" type="Node3D"]
 
 [node name="corridor2" parent="." instance=ExtResource("1_628el")]
 
 [node name="corridor1" parent="." instance=ExtResource("1_bive4")]
+transform = Transform3D(-5.2453663e-07, 0, 8, 0, 6, 0, -12, 0, -3.496911e-07, -3, -5.406, -77.871)
 
-[editable path="corridor1"]
+[node name="player" parent="." instance=ExtResource("3_628el")]
+transform = Transform3D(-8.742278e-08, 0, -2, 0, 2, 0, 2, 0, -8.742278e-08, 0, 0, -31.730585)

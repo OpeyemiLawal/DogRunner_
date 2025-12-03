@@ -223,4 +223,4 @@ shape = SubResource("BoxShape3D_vgfon")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 9.947598e-14, 0, 0.99999976, 4.043, -1.159, 0.228)
 
 [node name="EndPoint" type="Marker3D" parent="."]
-transform = Transform3D(0.99999934, 0, -1.4210855e-14, 0, 1, 0, -7.1054274e-15, 0, 0.99999976, -2.555, -1.164, -7.629)
+transform = Transform3D(0.99999917, 0, -1.7763568e-14, 0, 1, 0, -1.4210855e-14, 0, 0.99999976, -2.555, -1.3268961, -7.628999)
